@@ -15,7 +15,7 @@ A static website for GitHub Pages. No build step, no Node, no React: just upload
 
 1. Create a repository (e.g. `siam-cm-2027`) and upload all these files, keeping the folders.
 2. Go to **Settings → Pages**, choose **Deploy from a branch**, branch `main`, folder `/ (root)`, and save.
-3. After a minute the site is live at `https://<organisation>.github.io/<repository>/`.
+3. After a minute the site is live at `https://siam-chapter-unige.github.io/siam_cm_2027/`.
 
 ## Update the content
 
