@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SIAM Chapters Meeting 2027</title>
+<meta name="description" id="metaDesc" content="SIAM Chapters Meeting for Young Researchers in Applied Mathematics and Scientific Computing.">
+<meta name="theme-color" content="#0b2f63">
+<link rel="icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="content.js"></script>
+<style>
+:root {
+  --brand: #0b2f63; --brand-2: #2b8a9a; --brand-soft: #cfe3e8; --hl: #c8102e; --bg: #f6f8fa; --bg-rgb: 246,248,250; --bg-alt: #edeff3; --surface: #ffffff; --ink: #0b2f63; --text: #132948; --muted: #576a83; --line: #d8dee6; --btn: #0b2f63; --btn-ink: #ffffff; --link: #164f76; --footer: #0b2f63; --footer-text: #c9d1dd; --mesh-lo: #f6f8fa; --mesh-mid: #cfe3e8; --mesh-hi: #2b8a9a; --mesh-line: rgba(11,47,99,0.13);
+  --serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --sans: "Public Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #041226; --bg-rgb: 4,18,38; --bg-alt: #061832; --surface: #082145; --ink: #f2f5f8; --text: #e0edf0; --muted: #82949e; --line: #243345; --btn: #cfe3e8; --btn-ink: #0b2f63; --link: #cfe3e8; --footer: #030d1c; --footer-text: #ddebef; --mesh-lo: #041226; --mesh-mid: #08234a; --mesh-hi: #2b8a9a; --mesh-line: rgba(207,227,232,0.12); color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #041226; --bg-rgb: 4,18,38; --bg-alt: #061832; --surface: #082145; --ink: #f2f5f8; --text: #e0edf0; --muted: #82949e; --line: #243345; --btn: #cfe3e8; --btn-ink: #0b2f63; --link: #cfe3e8; --footer: #030d1c; --footer-text: #ddebef; --mesh-lo: #041226; --mesh-mid: #08234a; --mesh-hi: #2b8a9a; --mesh-line: rgba(207,227,232,0.12); color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 400 1.0625rem/1.65 var(--sans);
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+a { color: var(--link); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+a:hover { color: var(--hl); }
+:focus-visible { outline: 2px solid var(--brand-2); outline-offset: 3px; border-radius: 4px; }
+h1, h2, h3, h4 { color: var(--ink); margin: 0; }
+.wrap { max-width: 1140px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px); }
+.tba { color: var(--muted); font-style: italic; }
+
+/* ---------- Navigation ---------- */
+.nav {
+  position: fixed; inset: 0 0 auto; z-index: 50; height: 64px;
+  transition: background .25s ease, border-color .25s ease;
+  border-bottom: 1px solid transparent;
+}
+.nav.scrolled {
+  background: rgba(var(--bg-rgb), .86);
+  backdrop-filter: saturate(1.4) blur(12px); -webkit-backdrop-filter: saturate(1.4) blur(12px);
+  border-bottom-color: var(--line);
+}
+.nav .wrap { height: 100%; display: flex; align-items: center; gap: 24px; }
+.brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-weight: 600; font-size: .95rem; white-space: nowrap; }
+.brand svg { width: 26px; height: 26px; }
+.nav-links { display: flex; gap: 4px; margin: 0 0 0 auto; padding: 0; list-style: none; }
+.nav-links a {
+  display: block; padding: 6px 10px; border-radius: 6px; color: var(--text);
+  text-decoration: none; font-size: .9rem; font-weight: 500;
+}
+.nav-links a:hover { color: var(--ink); background: var(--bg-alt); }
+.icon-btn {
+  width: 38px; height: 38px; border-radius: 8px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--ink); display: grid; place-items: center; cursor: pointer; flex: none;
+}
+.icon-btn svg { width: 18px; height: 18px; }
+.menu-btn { display: none; }
+@media (max-width: 960px) {
+  .nav .wrap { gap: 8px; }
+  .brand { min-width: 0; font-size: .9rem; }
+  .brand span { overflow: hidden; text-overflow: ellipsis; }
+  .menu-btn { display: grid; margin-left: auto; }
+  .nav-links {
+    display: none; position: absolute; top: 64px; left: 0; right: 0; flex-direction: column;
+    background: var(--bg); border-bottom: 1px solid var(--line); padding: 8px clamp(20px, 4vw, 40px) 16px;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links a { padding: 10px 8px; font-size: 1rem; }
+}
+
+/* ---------- Hero ---------- */
+.hero { position: relative; min-height: 100vh; min-height: 100svh; display: flex; align-items: center; overflow: hidden; }
+#mesh { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hero::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(90deg, rgba(var(--bg-rgb), .97) 0%, rgba(var(--bg-rgb), .86) 40%, rgba(var(--bg-rgb), .15) 78%, rgba(var(--bg-rgb), 0) 100%);
+}
+.hero-inner { position: relative; z-index: 1; width: 100%; padding-top: 96px; padding-bottom: 72px; }
+.hero-text { max-width: 760px; }
+.kicker { margin: 0 0 22px; font-size: .95rem; font-weight: 500; color: var(--brand-2); }
+.hero h1 {
+  font: 400 clamp(2.6rem, 6.4vw, 5.1rem)/1.02 var(--serif);
+  letter-spacing: -0.018em; font-variation-settings: "opsz" 72; text-wrap: balance;
+}
+.subtitle { margin: 18px 0 0; font: italic 400 clamp(1.25rem, 2.3vw, 1.7rem)/1.3 var(--serif); color: var(--text); }
+.hero-meta { display: flex; flex-wrap: wrap; gap: 14px 40px; margin: 40px 0 0; }
+.hero-meta > div { display: flex; gap: 12px; align-items: flex-start; }
+.hero-meta svg { width: 20px; height: 20px; color: var(--brand-2); margin-top: 3px; flex: none; }
+.hero-meta dt { font-size: .82rem; color: var(--muted); }
+.hero-meta dd { margin: 0; font-weight: 500; color: var(--ink); }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 8px;
+  background: var(--btn); color: var(--btn-ink); border: 1px solid var(--btn);
+  font: 600 .95rem/1.2 var(--sans); text-decoration: none; cursor: pointer;
+  transition: transform .15s ease, background .15s ease;
+}
+.btn:hover { color: var(--btn-ink); transform: translateY(-1px); }
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn.ghost:hover { border-color: var(--brand-2); color: var(--ink); }
+.btn.small { padding: 9px 16px; font-size: .88rem; }
+.btn.disabled { background: transparent; color: var(--muted); border: 1px dashed var(--line); cursor: default; transform: none; }
+
+/* ---------- Sections ---------- */
+.sec { padding: clamp(64px, 9vw, 112px) 0; }
+.sec.alt { background: var(--bg-alt); }
+.sec-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr); gap: clamp(28px, 5vw, 72px); }
+.sec-head h2 {
+  font: 400 clamp(2rem, 3.6vw, 2.75rem)/1.08 var(--serif); letter-spacing: -0.012em;
+  position: sticky; top: 96px;
+}
+.sec-intro { margin: 16px 0 0; color: var(--muted); font-size: .98rem; }
+@media (max-width: 860px) {
+  .sec-grid { grid-template-columns: 1fr; }
+  .sec-head h2 { position: static; }
+}
+.sec-body > * + * { margin-top: 32px; }
+.sec-body h3 { font: 500 1.35rem/1.25 var(--serif); }
+.sec-body h3 + * { margin-top: 14px; }
+.prose { max-width: 68ch; }
+.prose p { margin: 0 0 1.1em; }
+.prose p:last-child { margin-bottom: 0; }
+.prose strong { color: var(--ink); font-weight: 600; }
+.note { color: var(--muted); font-style: italic; margin: 0; }
+
+.topics { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.topics li {
+  padding: 8px 16px; border: 1px solid var(--line); border-radius: 999px;
+  background: var(--surface); font-size: .93rem; color: var(--ink);
+}
+
+/* Important dates */
+.timeline { list-style: none; margin: 0; padding: 0; position: relative; }
+.timeline::before { content: ""; position: absolute; left: 7px; top: 12px; bottom: 12px; width: 1px; background: var(--line); }
+.timeline li { position: relative; display: grid; grid-template-columns: 220px 1fr; gap: 8px 24px; padding: 14px 0 14px 36px; border-bottom: 1px solid var(--line); }
+.timeline li:last-child { border-bottom: 0; }
+.timeline li::before {
+  content: ""; position: absolute; left: 0; top: 21px; width: 15px; height: 15px; border-radius: 50%;
+  background: var(--bg-alt); border: 2px solid var(--brand-2);
+}
+.timeline li:last-child::before { background: var(--hl); border-color: var(--hl); }
+.timeline .when { font: 500 1.12rem/1.4 var(--serif); color: var(--ink); }
+.timeline .what { color: var(--text); }
+@media (max-width: 600px) { .timeline li { grid-template-columns: 1fr; } }
+
+/* Registration */
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: step; display: grid; gap: 16px; }
+.steps li {
+  counter-increment: step; position: relative; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 12px; padding: 24px 24px 24px 76px;
+}
+.steps li::before {
+  content: counter(step); position: absolute; left: 24px; top: 22px; width: 34px; height: 34px; border-radius: 50%;
+  display: grid; place-items: center; font: 500 1.05rem/1 var(--serif); color: var(--ink); border: 1px solid var(--brand-2);
+}
+.steps h3 { font: 500 1.25rem/1.3 var(--serif); }
+.steps .deadline { margin: 4px 0 0; font-size: .9rem; color: var(--muted); }
+.steps .deadline strong { color: var(--ink); font-weight: 600; }
+.steps p.desc { margin: 10px 0 16px; }
+
+/* Schedule */
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid var(--line); }
+.tab {
+  appearance: none; background: none; border: 0; padding: 12px 16px; margin-bottom: -1px; cursor: pointer;
+  font: 500 .98rem var(--sans); color: var(--muted); border-bottom: 2px solid transparent;
+}
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--hl); }
+.tab:hover { color: var(--ink); }
+.table-wrap { overflow-x: auto; margin-top: 0; }
+.sched { width: 100%; border-collapse: collapse; font-size: .97rem; }
+.sched th { text-align: left; font-weight: 600; font-size: .82rem; color: var(--muted); padding: 14px 12px 10px; border-bottom: 1px solid var(--line); }
+.sched td { padding: 12px; vertical-align: top; border-top: 1px solid var(--line); }
+.sched tr.cont td { border-top-color: transparent; padding-top: 2px; }
+.sched td.time { width: 128px; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 500; }
+.sched td.prog { color: var(--ink); }
+.sched tr.pause td { background: var(--surface); color: var(--muted); }
+.sched tr.pause td.prog { font-style: italic; color: var(--muted); }
+.sched tbody tr:first-child td { border-top: 0; }
+.sched .dash { color: var(--muted); }
+
+/* Speakers */
+.speakers { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 18px; }
+.speaker { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; }
+.speaker .top { display: flex; gap: 16px; align-items: center; }
+.avatar {
+  width: 72px; height: 72px; border-radius: 50%; flex: none; object-fit: cover; background: var(--bg-alt);
+  display: grid; place-items: center; color: var(--brand-2); font: 500 1.4rem var(--serif); border: 1px solid var(--line);
+}
+.avatar svg { width: 34px; height: 34px; }
+.speaker h3 { font: 500 1.25rem/1.25 var(--serif); }
+.speaker .aff { margin: 4px 0 0; font-size: .9rem; color: var(--muted); line-height: 1.45; }
+.speaker .talk { margin: 20px 0 0; font: italic 400 1.15rem/1.4 var(--serif); color: var(--ink); }
+.speaker details { margin-top: 16px; border-top: 1px solid var(--line); padding-top: 12px; }
+.speaker summary { cursor: pointer; font-weight: 600; font-size: .9rem; color: var(--link); list-style: none; display: inline-flex; gap: 6px; align-items: center; }
+.speaker summary::-webkit-details-marker { display: none; }
+.speaker summary::after { content: "+"; font-weight: 400; font-size: 1.1rem; }
+.speaker details[open] summary::after { content: "−"; }
+.speaker .abstract { margin-top: 10px; font-size: .95rem; }
+.speaker .abstract p { margin: 0 0 .8em; }
+.speaker.empty { border-style: dashed; background: transparent; }
+
+/* Talks lists */
+.talks { list-style: none; margin: 0; padding: 0; }
+.talks li { padding: 16px 0; border-bottom: 1px solid var(--line); }
+.talks li:first-child { padding-top: 4px; }
+.talks .who { font-weight: 600; color: var(--ink); }
+.talks .aff { color: var(--muted); font-size: .92rem; }
+.talks .title { display: block; margin-top: 4px; font: italic 400 1.1rem/1.4 var(--serif); color: var(--text); }
+
+/* Venue */
+.venue-name { font: 500 1.35rem/1.3 var(--serif); color: var(--ink); margin: 0; }
+.venue-addr { margin: 4px 0 0; color: var(--muted); }
+.map { position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: var(--surface); }
+.map iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.map.placeholder { display: grid; place-items: center; text-align: center; padding: 24px; color: var(--muted); background-color: var(--surface);
+  background-image: linear-gradient(60deg, transparent 49.5%, var(--line) 49.5%, var(--line) 50.5%, transparent 50.5%), linear-gradient(-60deg, transparent 49.5%, var(--line) 49.5%, var(--line) 50.5%, transparent 50.5%), linear-gradient(0deg, transparent 49%, var(--line) 49%, var(--line) 51%, transparent 51%);
+  background-size: 56px 48px; }
+.map.placeholder span { background: var(--surface); padding: 10px 16px; border-radius: 8px; border: 1px solid var(--line); }
+.hotels { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.hotels li { display: flex; justify-content: space-between; gap: 16px; padding: 12px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+.hotels .stars { color: var(--brand-2); letter-spacing: 2px; white-space: nowrap; }
+.contact-line { margin: 0; }
+
+/* Organisers */
+.group + .group { margin-top: 40px; }
+.members { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 18px 24px; }
+.members li { display: flex; gap: 14px; align-items: center; }
+.members .avatar { width: 56px; height: 56px; font-size: 1.1rem; }
+.members .avatar svg { width: 26px; height: 26px; }
+.members strong { display: block; color: var(--ink); font-weight: 600; line-height: 1.3; }
+.members span { display: block; font-size: .87rem; color: var(--muted); line-height: 1.4; }
+
+/* Institutions */
+.logos { display: flex; flex-wrap: wrap; gap: 14px; }
+.logos a, .logos .logo {
+  height: 96px; min-width: 132px; padding: 14px 20px; background: #fff; border: 1px solid var(--line); border-radius: 10px;
+  display: grid; place-items: center; transition: border-color .15s ease;
+}
+.logos a:hover { border-color: var(--brand-2); }
+.logos img { max-height: 64px; max-width: 170px; object-fit: contain; display: block; }
+.logo-label { font-size: .9rem; color: var(--muted); margin: 0 0 12px; }
+
+/* Footer */
+footer { background: var(--footer); color: var(--footer-text); padding: 48px 0; font-size: .92rem; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 16px 32px; justify-content: space-between; align-items: center; }
+footer a { color: #ffffff; }
+footer a:hover { color: var(--brand-soft); }
+footer .links { display: flex; gap: 24px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#home" id="brand">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4 26 16 5l12 21Z"/><path d="M10 15.5h12M16 26l-6-10.5M16 26l6-10.5"/></g></svg>
+      <span id="brandText">SIAM Chapters Meeting</span>
+    </a>
+    <ul class="nav-links" id="navLinks"></ul>
+    <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <button class="icon-btn" id="themeBtn" aria-label="Switch colour theme">
+      <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="hero" id="home">
+  <canvas id="mesh" aria-hidden="true"></canvas>
+  <div class="wrap hero-inner"><div class="hero-text" id="heroContent"></div></div>
+</section>
+
+<main id="main"></main>
+<footer><div class="wrap" id="footerContent"></div></footer>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------------- helpers ---------------- */
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const has = (v) => v != null && String(v).trim() !== "";
+  const tba = (v, fallback) => has(v) ? esc(v) : '<span class="tba">' + esc(fallback || "To be announced") + "</span>";
+  let DATA = {};
+
+  // Replace {year}, {dates}, {venue}, {city}-style tokens in editable text
+  function fill(s) {
+    const h = DATA.hero || {}, v = DATA.venue || {};
+    const map = {
+      year: (DATA.meta && DATA.meta.year) || "",
+      dates: has(h.dates) ? h.dates : "dates to be announced",
+      venue: has(v.name) ? v.name : (has(h.location) ? h.location : "a venue to be announced"),
+      location: has(h.location) ? h.location : "a location to be announced"
+    };
+    return String(s == null ? "" : s).replace(/\{(year|dates|venue|location)\}/g, (_, k) => map[k]);
+  }
+  // Tiny markdown: **bold**, *italic*, [text](link). Math ($...$) is left for KaTeX.
+  function md(s) {
+    let h = esc(fill(s));
+    h = h.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_, t, u) => '<a href="' + u + '" target="_blank" rel="noopener">' + t + "</a>");
+    h = h.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+    h = h.replace(/(^|[^*\w])\*([^*\s][^*]*?)\*(?!\w)/g, "$1<em>$2</em>");
+    return h;
+  }
+  const paras = (s) => String(s || "").split(/\n\s*\n/).filter((p) => p.trim()).map((p) => "<p>" + md(p.trim()) + "</p>").join("");
+  const url = (u) => esc(String(u || "").trim());
+  const ext = (u) => /^https?:/i.test(String(u)) ? ' target="_blank" rel="noopener"' : "";
+  const initials = (n) => String(n || "").trim().split(/\s+/).filter(Boolean).map((w) => w[0]).slice(0, 2).join("").toUpperCase();
+  const TRI = '<svg viewBox="0 0 32 32" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M4 26 16 5l12 21Z"/><path d="M10 15.5h12M16 26l-6-10.5M16 26l6-10.5"/></g></svg>';
+  function avatar(photo, name) {
+    if (has(photo)) return '<img class="avatar" src="' + url(photo) + '" alt="' + esc(name || "") + '" loading="lazy">';
+    return '<div class="avatar" aria-hidden="true">' + (has(name) ? esc(initials(name)) : TRI) + "</div>";
+  }
+  const ICON_PIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
+  const ICON_CAL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>';
+
+
+  /* ---------------- colours (from content.js "theme") ---------------- */
+  const h2r = (h) => { h = String(h || "").trim().replace("#", ""); if (h.length === 3) h = h.split("").map((c) => c + c).join(""); const n = parseInt(h, 16) || 0; return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+  const r2h = (r) => "#" + r.map((x) => Math.max(0, Math.min(255, Math.round(x))).toString(16).padStart(2, "0")).join("");
+  const mix = (a, b, t) => { const A = h2r(a), B = h2r(b); return r2h(A.map((v, i) => v * (1 - t) + B[i] * t)); };
+  const rgba = (a, al) => "rgba(" + h2r(a).join(",") + "," + al + ")";
+  const isHex = (v) => /^#?[0-9a-f]{6}$/i.test(String(v || "").trim());
+  function applyTheme(t) {
+    t = t || {};
+    const B = isHex(t.primary) ? t.primary : "#0b2f63", S = isHex(t.secondary) ? t.secondary : "#2b8a9a",
+          L = isHex(t.light) ? t.light : "#cfe3e8", R = isHex(t.highlight) ? t.highlight : "#c8102e", W = "#ffffff", K = "#000000";
+    const bg = mix(W, B, .035), dbg = mix(B, K, .62);
+    const light = { "--brand": B, "--brand-2": S, "--brand-soft": L, "--hl": R, "--bg": bg, "--bg-rgb": h2r(bg).join(","), "--bg-alt": mix(W, B, .075), "--surface": W,
+      "--ink": B, "--text": mix(B, "#1c2226", .45), "--muted": mix(B, "#8a9299", .6), "--line": mix(W, B, .16), "--btn": B, "--btn-ink": W, "--link": mix(B, S, .35),
+      "--footer": B, "--footer-text": mix(B, W, .78), "--mesh-lo": bg, "--mesh-mid": L, "--mesh-hi": S, "--mesh-line": rgba(B, .13) };
+    const dark = { "--brand": B, "--brand-2": S, "--brand-soft": L, "--hl": R, "--bg": dbg, "--bg-rgb": h2r(dbg).join(","), "--bg-alt": mix(B, K, .5), "--surface": mix(B, K, .3),
+      "--ink": "#f2f5f8", "--text": mix(L, W, .35), "--muted": mix(L, dbg, .38), "--line": mix(dbg, L, .16), "--btn": L, "--btn-ink": B, "--link": L,
+      "--footer": mix(B, K, .72), "--footer-text": mix(L, W, .3), "--mesh-lo": dbg, "--mesh-mid": mix(B, K, .25), "--mesh-hi": S, "--mesh-line": rgba(L, .12) };
+    const css = (o) => Object.keys(o).map((k) => k + ":" + o[k] + ";").join("");
+    let el = document.getElementById("themeVars");
+    if (!el) { el = document.createElement("style"); el.id = "themeVars"; document.head.appendChild(el); }
+    el.textContent = ":root{" + css(light) + "color-scheme:light}" +
+      "@media (prefers-color-scheme: dark){:root:not([data-theme=\"light\"]){" + css(dark) + "color-scheme:dark}}" +
+      ":root[data-theme=\"dark\"]{" + css(dark) + "color-scheme:dark}";
+    const meta = document.querySelector('meta[name="theme-color"]'); if (meta) meta.setAttribute("content", B);
+  }
+
+  /* ---------------- section builders ---------------- */
+  function section(id, title, intro, body) {
+    return { id, html: (alt) => '<section id="' + id + '" class="sec' + (alt ? " alt" : "") + '"><div class="wrap sec-grid"><header class="sec-head"><h2>' + esc(title) + "</h2>" + (has(intro) ? '<p class="sec-intro">' + md(intro) + "</p>" : "") + '</header><div class="sec-body">' + body + "</div></div></section>" };
+  }
+
+  function buildAbout(d) {
+    const a = d.about || {}, t = d.topics || {};
+    let body = '<div class="prose">' + (a.paragraphs || []).filter(has).map((p) => "<p>" + md(p) + "</p>").join("") + "</div>";
+    const items = (t.items || []).filter(has);
+    if (items.length) {
+      body += "<div><h3>Topics</h3>" + (has(t.intro) ? '<p style="margin:10px 0 16px">' + md(t.intro) + "</p>" : "") +
+        '<ul class="topics">' + items.map((x) => "<li>" + esc(x) + "</li>").join("") + "</ul></div>";
+    }
+    return section("about", "About the meeting", "", body);
+  }
+
+  function buildDates(d) {
+    const list = (d.importantDates || []).filter((x) => has(x.event) || has(x.date));
+    const body = list.length
+      ? '<ol class="timeline">' + list.map((x) => '<li><span class="when">' + tba(x.date, "Date to be announced") + '</span><span class="what">' + esc(x.event) + "</span></li>").join("") + "</ol>"
+      : '<p class="note">Dates will be announced soon.</p>';
+    return section("dates", "Important dates", "", body);
+  }
+
+  function buildRegistration(d) {
+    const r = d.registration || {};
+    const steps = (r.steps || []).filter((s) => has(s.title));
+    const body = steps.length ? '<ol class="steps">' + steps.map((s) =>
+      "<li><h3>" + esc(s.title) + '</h3><p class="deadline">Deadline: ' + (has(s.deadline) ? "<strong>" + esc(s.deadline) + "</strong>" : '<span class="tba">to be announced</span>') + "</p>" +
+      (has(s.description) ? '<p class="desc">' + md(s.description) + "</p>" : '<p class="desc"></p>') +
+      (has(s.link) ? '<a class="btn small" href="' + url(s.link) + '"' + ext(s.link) + ">" + esc(s.linkLabel || "Open form") + "</a>" : '<span class="btn small disabled">Form opens soon</span>') +
+      "</li>").join("") + "</ol>" : '<p class="note">Registration details will be announced soon.</p>';
+    return section("registration", "Registration", r.intro, body);
+  }
+
+  function buildSchedule(d) {
+    const s = d.schedule || {};
+    const days = (s.days || []).filter((x) => x);
+    if (!days.length) return section("schedule", "Schedule", s.intro, '<p class="note">The programme will be published soon.</p>');
+    const pause = /break|lunch|coffee|dinner/i;
+    let body = '<div><div class="tabs" role="tablist" aria-label="Meeting days">' +
+      days.map((day, i) => '<button class="tab" role="tab" id="tab-' + i + '" aria-controls="panel-' + i + '" aria-selected="' + (i === 0) + '" tabindex="' + (i === 0 ? 0 : -1) + '">' + (has(day.label) ? esc(day.label) : "Day " + (i + 1)) + "</button>").join("") + "</div>";
+    body += days.map((day, i) => {
+      const rows = (day.sessions || []).map((x) => {
+        const cls = [!has(x.time) && !has(x.programme) ? "cont" : "", pause.test(x.programme || "") ? "pause" : ""].join(" ").trim();
+        const time = has(x.time) ? esc(x.time) : (has(x.programme) ? '<span class="dash">TBA</span>' : "");
+        return "<tr" + (cls ? ' class="' + cls + '"' : "") + '><td class="time">' + time + '</td><td class="prog">' + esc(x.programme || "") + "</td><td>" + (has(x.speaker) ? esc(x.speaker) : '<span class="dash">—</span>') + "</td></tr>";
+      }).join("");
+      return '<div class="table-wrap" role="tabpanel" id="panel-' + i + '" aria-labelledby="tab-' + i + '"' + (i ? " hidden" : "") + '><table class="sched"><thead><tr><th>Time</th><th>Programme</th><th>Speaker</th></tr></thead><tbody>' + rows + "</tbody></table></div>";
+    }).join("") + "</div>";
+    if (has(s.programmeUrl)) body += '<div><a class="btn ghost small" href="' + url(s.programmeUrl) + '"' + ext(s.programmeUrl) + ">Download the full programme (PDF)</a></div>";
+    return section("schedule", "Schedule", s.intro, body);
+  }
+
+  function buildSpeakers(d) {
+    const list = d.keynotes || [];
+    const body = list.length ? '<div class="speakers">' + list.map((k) => {
+      const empty = !has(k.name);
+      return '<article class="speaker' + (empty ? " empty" : "") + '"><div class="top">' + avatar(k.photo, k.name) + "<div><h3>" + (empty ? '<span class="tba">Speaker to be announced</span>' : esc(k.name)) + "</h3>" +
+        (has(k.affiliation) ? '<p class="aff">' + esc(k.affiliation) + "</p>" : "") + "</div></div>" +
+        (has(k.title) ? '<p class="talk">' + md(k.title) + "</p>" : (empty ? "" : '<p class="talk tba">Talk title to be announced</p>')) +
+        (has(k.abstract) ? '<details><summary>Abstract</summary><div class="abstract">' + paras(k.abstract) + "</div></details>" : "") +
+        "</article>";
+    }).join("") + "</div>" : '<p class="note">Keynote speakers will be announced soon.</p>';
+    return section("speakers", "Keynote talks", "", body);
+  }
+
+  function talkList(list, note) {
+    list = (list || []).filter((t) => has(t.name) || has(t.title));
+    if (!list.length) return '<p class="note">' + esc(note || "To be announced.") + "</p>";
+    return '<ul class="talks">' + list.map((t) => '<li><span class="who">' + esc(t.name) + "</span>" + (has(t.affiliation) ? '<span class="aff">, ' + esc(t.affiliation) + "</span>" : "") + (has(t.title) ? '<span class="title">' + md(t.title) + "</span>" : "") + "</li>").join("") + "</ul>";
+  }
+  function buildTalks(d) {
+    const t = d.talks || {};
+    const body = "<div><h3>Contributed and invited talks</h3>" + talkList(t.contributed, t.contributedNote) + "</div>" +
+      "<div><h3>Poster session</h3>" + talkList(t.posters, t.postersNote) + "</div>";
+    return section("talks", "Talks and posters", "", body);
+  }
+
+  function buildVenue(d) {
+    const v = d.venue || {}, a = d.accommodation || {}, c = d.contact || {};
+    let body = "<div>" + (has(v.name) ? '<p class="venue-name">' + esc(v.name) + "</p>" : '<p class="venue-name tba">Venue to be announced</p>') +
+      (has(v.address) ? '<p class="venue-addr">' + esc(v.address) + "</p>" : "") + "</div>";
+    const dirs = (v.directions || []).filter(has);
+    if (dirs.length) body += '<div class="prose">' + dirs.map((p) => "<p>" + md(p) + "</p>").join("") + "</div>";
+    body += has(v.mapEmbedUrl)
+      ? '<div class="map"><iframe src="' + url(v.mapEmbedUrl) + '" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="Map of the venue"></iframe></div>'
+      : '<div class="map placeholder"><span>The map will appear once the venue is confirmed.</span></div>';
+    if (has(v.mapLinkUrl)) body += '<div><a class="btn ghost small" href="' + url(v.mapLinkUrl) + '" target="_blank" rel="noopener">Open in Google Maps</a></div>';
+    const hotels = (a.hotels || []).filter((h) => has(h.name));
+    body += "<div><h3>Accommodation</h3>" + (hotels.length
+      ? (has(a.intro) ? '<p style="margin:10px 0 14px">' + md(a.intro) + "</p>" : "") + '<ul class="hotels">' + hotels.map((h) => "<li>" + (has(h.url) ? '<a href="' + url(h.url) + '" target="_blank" rel="noopener">' + esc(h.name) + "</a>" : esc(h.name)) + '<span class="stars" aria-label="' + (parseInt(h.stars, 10) || 0) + ' stars">' + "★".repeat(Math.min(5, parseInt(h.stars, 10) || 0)) + "</span></li>").join("") + "</ul>"
+      : '<p class="note">Suggestions for accommodation will be added once the venue is confirmed.</p>') + "</div>";
+    if (has(a.extraUrl)) body += '<div><a class="btn ghost small" href="' + url(a.extraUrl) + '"' + ext(a.extraUrl) + ">" + esc(a.extraLabel || "More information") + "</a></div>";
+    if (has(c.email)) body += '<p class="contact-line">Questions? Write to us at <a href="mailto:' + url(c.email) + '">' + esc(c.email) + "</a>.</p>";
+    return section("venue", "Venue and travel", "", body);
+  }
+
+  function buildOrganisers(d) {
+    const groups = (d.organisers || []).filter((g) => has(g.title) || (g.members || []).length);
+    const body = groups.length ? groups.map((g) => {
+      const m = (g.members || []).filter((x) => has(x.name));
+      return '<div class="group"><h3>' + esc(g.title) + "</h3>" + (m.length
+        ? '<ul class="members">' + m.map((x) => "<li>" + avatar(x.photo, x.name) + "<div><strong>" + esc(x.name) + "</strong>" + (has(x.affiliation) ? "<span>" + esc(x.affiliation) + "</span>" : "") + "</div></li>").join("") + "</ul>"
+        : '<p class="note">To be announced.</p>') + "</div>";
+    }).join("") : '<p class="note">To be announced.</p>';
+    return section("organisers", "Organisers", "", body);
+  }
+
+  function logoRow(list) {
+    list = (list || []).filter((x) => has(x.logo) || has(x.name));
+    return '<div class="logos">' + list.map((x) => {
+      const inner = has(x.logo) ? '<img src="' + url(x.logo) + '" alt="' + esc(x.name) + '" loading="lazy">' : '<span style="color:var(--brand);font-weight:600;text-align:center">' + esc(x.name) + "</span>";
+      return has(x.url) ? '<a href="' + url(x.url) + '" target="_blank" rel="noopener" title="' + esc(x.name) + '">' + inner + "</a>" : '<div class="logo">' + inner + "</div>";
+    }).join("") + "</div>";
+  }
+  function buildInstitutions(d) {
+    const i = d.institutions || {};
+    let body = "";
+    if ((i.contributors || []).length) body += '<div><p class="logo-label">Contributors</p>' + logoRow(i.contributors) + "</div>";
+    if ((i.chapters || []).length) body += '<div><p class="logo-label">' + md(i.chaptersIntro || "Participating SIAM Student Chapters") + "</p>" + logoRow(i.chapters) + "</div>";
+    if ((i.patronage || []).length) body += '<div><p class="logo-label">Under the auspices of</p>' + logoRow(i.patronage) + "</div>";
+    return section("institutions", "Institutions involved", "", body || '<p class="note">To be announced.</p>');
+  }
+
+  /* ---------------- render ---------------- */
+  const NAV = [["about", "About"], ["dates", "Dates"], ["registration", "Registration"], ["schedule", "Schedule"], ["speakers", "Speakers"], ["talks", "Talks"], ["venue", "Venue"], ["organisers", "Organisers"]];
+  const BUILD = { about: buildAbout, dates: buildDates, registration: buildRegistration, schedule: buildSchedule, speakers: buildSpeakers, talks: buildTalks, venue: buildVenue, organisers: buildOrganisers, institutions: buildInstitutions };
+
+  function render(d) {
+    DATA = d || {};
+    applyTheme(DATA.theme);
+    if (typeof colors !== "undefined" && colors) readColors();
+    const show = Object.assign({ about: true, dates: true, registration: true, schedule: true, speakers: true, talks: true, venue: true, organisers: true, institutions: true }, DATA.sections || {});
+    const meta = DATA.meta || {}, h = DATA.hero || {};
+    document.title = meta.pageTitle || "SIAM Chapters Meeting";
+    if (has(meta.description)) $("metaDesc").setAttribute("content", meta.description);
+    $("brandText").textContent = "SIAM Chapters Meeting" + (has(meta.year) ? " " + meta.year : "");
+
+    $("navLinks").innerHTML = NAV.filter(([k]) => show[k]).map(([k, l]) => '<li><a href="#' + k + '">' + l + "</a></li>").join("");
+
+    const ctaHref = has(h.ctaUrl) ? url(h.ctaUrl) : "#registration";
+    $("heroContent").innerHTML =
+      (has(h.kicker) ? '<p class="kicker">' + esc(fill(h.kicker)) + "</p>" : "") +
+      "<h1>" + esc(fill(h.title || "SIAM Chapters Meeting")) + "</h1>" +
+      (has(h.subtitle) ? '<p class="subtitle">' + esc(fill(h.subtitle)) + "</p>" : "") +
+      '<dl class="hero-meta"><div>' + ICON_PIN + "<div><dt>Where</dt><dd>" + tba(h.location, "Venue to be announced") + "</dd></div></div><div>" + ICON_CAL + "<div><dt>When</dt><dd>" + tba(h.dates, "Dates to be announced") + "</dd></div></div></dl>" +
+      '<div class="hero-actions">' + (show.registration || has(h.ctaUrl) ? '<a class="btn" href="' + ctaHref + '"' + ext(h.ctaUrl) + ">" + esc(h.ctaLabel || "Register") + "</a>" : "") +
+      '<a class="btn ghost" href="#about">About the meeting</a></div>';
+
+    const parts = Object.keys(BUILD).filter((k) => show[k]).map((k) => BUILD[k](DATA));
+    $("main").innerHTML = parts.map((p, i) => p.html(i % 2 === 1)).join("");
+
+    const f = DATA.footer || {}, c = DATA.contact || {};
+    $("footerContent").innerHTML = "<span>" + esc(fill(f.text || "")) + '</span><span class="links">' +
+      (has(c.email) ? '<a href="mailto:' + url(c.email) + '">' + esc(c.email) + "</a>" : "") +
+      (has(f.privacyUrl) ? '<a href="' + url(f.privacyUrl) + '" target="_blank" rel="noopener">Privacy policy</a>' : "") + "</span>";
+
+    bindTabs();
+    maybeMath();
+  }
+
+  function bindTabs() {
+    const tabs = Array.from(document.querySelectorAll(".tab"));
+    function select(i) {
+      tabs.forEach((t, j) => {
+        t.setAttribute("aria-selected", String(i === j)); t.tabIndex = i === j ? 0 : -1;
+        const p = $("panel-" + j); if (p) p.hidden = i !== j;
+      });
+    }
+    tabs.forEach((t, i) => {
+      t.addEventListener("click", () => select(i));
+      t.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+          const n = (i + (e.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length; select(n); tabs[n].focus();
+        }
+      });
+    });
+  }
+
+  // Load KaTeX only when an abstract contains $math$
+  let katexLoading = null;
+  function maybeMath() {
+    const text = JSON.stringify(DATA.keynotes || []) + JSON.stringify((DATA.talks || {}));
+    if (!/\$[^$]+\$/.test(text)) return;
+    const run = () => window.renderMathInElement && window.renderMathInElement($("main"), { delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }], throwOnError: false });
+    if (window.renderMathInElement) return run();
+    if (!katexLoading) {
+      const base = "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/";
+      const css = document.createElement("link"); css.rel = "stylesheet"; css.href = base + "katex.min.css"; document.head.appendChild(css);
+      const load = (src) => new Promise((ok, ko) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = ko; document.head.appendChild(s); });
+      katexLoading = load(base + "katex.min.js").then(() => load(base + "contrib/auto-render.min.js")).catch(() => {});
+    }
+    katexLoading.then(run);
+  }
+
+  /* ---------------- nav, theme ---------------- */
+  const nav = $("nav");
+  const onScroll = () => nav.classList.toggle("scrolled", window.scrollY > 24);
+  window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+  $("menuBtn").addEventListener("click", () => {
+    const open = $("navLinks").classList.toggle("open");
+    $("menuBtn").setAttribute("aria-expanded", String(open));
+  });
+  $("navLinks").addEventListener("click", (e) => { if (e.target.closest("a")) { $("navLinks").classList.remove("open"); $("menuBtn").setAttribute("aria-expanded", "false"); } });
+
+  const root = document.documentElement;
+  const sysDark = window.matchMedia("(prefers-color-scheme: dark)");
+  function currentTheme() { return root.dataset.theme || (sysDark.matches ? "dark" : "light"); }
+  function syncThemeIcon() { const dark = currentTheme() === "dark"; $("iconSun").hidden = dark; $("iconMoon").hidden = !dark; }
+  try { const t = localStorage.getItem("siam-theme"); if (t === "dark" || t === "light") root.dataset.theme = t; } catch (e) {}
+  syncThemeIcon();
+  $("themeBtn").addEventListener("click", () => {
+    root.dataset.theme = currentTheme() === "dark" ? "light" : "dark";
+    try { localStorage.setItem("siam-theme", root.dataset.theme); } catch (e) {}
+    syncThemeIcon(); readColors();
+  });
+  sysDark.addEventListener && sysDark.addEventListener("change", () => { syncThemeIcon(); readColors(); });
+
+  /* ---------------- hero: animated finite-element mesh ---------------- */
+  const canvas = $("mesh"), ctx = canvas.getContext("2d");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let W = 0, H = 0, pts = [], tris = [], colors = null, running = true, raf = 0;
+  const mouse = { x: -1e4, y: -1e4, tx: -1e4, ty: -1e4 };
+
+  function hexToRgb(h) { h = h.trim().replace("#", ""); if (h.length === 3) h = h.split("").map((c) => c + c).join(""); const n = parseInt(h, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+  function readColors() {
+    const cs = getComputedStyle(root);
+    colors = { lo: hexToRgb(cs.getPropertyValue("--mesh-lo")), mid: hexToRgb(cs.getPropertyValue("--mesh-mid")), hi: hexToRgb(cs.getPropertyValue("--mesh-hi")), line: cs.getPropertyValue("--mesh-line").trim() };
+    if (reduce) draw(0);
+  }
+  function ramp(u) { // u in [0,1] -> rgb
+    const a = u < .5 ? colors.lo : colors.mid, b = u < .5 ? colors.mid : colors.hi, t = u < .5 ? u * 2 : (u - .5) * 2;
+    return "rgb(" + Math.round(a[0] + (b[0] - a[0]) * t) + "," + Math.round(a[1] + (b[1] - a[1]) * t) + "," + Math.round(a[2] + (b[2] - a[2]) * t) + ")";
+  }
+  function build() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = canvas.clientWidth; H = canvas.clientHeight;
+    canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const s = Math.max(46, Math.min(78, W / 22)), rh = s * 0.866;
+    const cols = Math.ceil(W / s) + 3, rows = Math.ceil(H / rh) + 3;
+    let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    pts = [];
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      pts.push({ x0: (c - 1) * s + (r % 2 ? s / 2 : 0) + (rnd() - .5) * s * .38, y0: (r - 1) * rh + (rnd() - .5) * rh * .38, p: rnd() * 6.283, x: 0, y: 0 });
+    }
+    tris = [];
+    for (let r = 0; r < rows - 1; r++) for (let c = 0; c < cols - 1; c++) {
+      const i = r * cols + c, j = i + cols;
+      if (r % 2 === 0) { tris.push([i, i + 1, j], [i + 1, j + 1, j]); }
+      else { tris.push([i, j + 1, j], [i, i + 1, j + 1]); }
+    }
+    draw(performance.now());
+  }
+  function field(x, y, t) {
+    // a smooth travelling "solution" plus a bump that follows the pointer
+    const u = .5 + .28 * Math.sin(x * .0062 + t * .00021) * Math.cos(y * .0081 - t * .00017) + .18 * Math.sin((x + y) * .0034 + t * .00013);
+    const dx = x - mouse.x, dy = y - mouse.y;
+    return Math.max(0, Math.min(1, u + .38 * Math.exp(-(dx * dx + dy * dy) / 26000)));
+  }
+  function draw(t) {
+    if (!colors || !pts.length) return;
+    mouse.x += (mouse.tx - mouse.x) * .08; mouse.y += (mouse.ty - mouse.y) * .08;
+    const amp = reduce ? 0 : 5;
+    for (const p of pts) {
+      let x = p.x0 + amp * Math.sin(t * .0005 + p.p), y = p.y0 + amp * Math.cos(t * .00043 + p.p * 1.3);
+      const dx = x - mouse.x, dy = y - mouse.y, d2 = dx * dx + dy * dy, R = 170;
+      if (d2 < R * R && d2 > 1) { const d = Math.sqrt(d2), k = (1 - d / R); x += dx / d * k * k * 26; y += dy / d * k * k * 26; }
+      p.x = x; p.y = y;
+    }
+    ctx.clearRect(0, 0, W, H);
+    ctx.lineWidth = 1; ctx.strokeStyle = colors.line; ctx.lineJoin = "round";
+    for (const tr of tris) {
+      const a = pts[tr[0]], b = pts[tr[1]], c = pts[tr[2]];
+      const cx = (a.x + b.x + c.x) / 3, cy = (a.y + b.y + c.y) / 3;
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.lineTo(c.x, c.y); ctx.closePath();
+      ctx.fillStyle = ramp(field(cx, cy, t)); ctx.fill(); ctx.stroke();
+    }
+  }
+  function loop(t) { if (running) draw(t); raf = requestAnimationFrame(loop); }
+  window.addEventListener("pointermove", (e) => { const r = canvas.getBoundingClientRect(); mouse.tx = e.clientX - r.left; mouse.ty = e.clientY - r.top; }, { passive: true });
+  document.addEventListener("pointerleave", () => { mouse.tx = mouse.ty = -1e4; });
+  let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(build, 120); });
+  if ("IntersectionObserver" in window) new IntersectionObserver((en) => { running = en[0].isIntersecting && !document.hidden; }).observe(canvas);
+  document.addEventListener("visibilitychange", () => { running = !document.hidden; });
+
+  /* ---------------- start ---------------- */
+  render(window.SITE_CONTENT || {});
+  readColors(); build();
+  if (!reduce) raf = requestAnimationFrame(loop);
+
+  // Live preview support for editor.html
+  if (/[?&]preview=1/.test(location.search)) {
+    window.addEventListener("message", (e) => {
+      const m = e.data || {};
+      if (m.type === "siam-preview" && m.data) { const y = window.scrollY; render(m.data); window.scrollTo(0, y); }
+      if (m.type === "siam-scroll" && m.id) { const el = document.getElementById(m.id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }
+    });
+    if (window.parent !== window) window.parent.postMessage({ type: "siam-preview-ready" }, "*");
+  }
+})();
+</script>
+</body>
+</html>

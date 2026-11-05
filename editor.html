@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Website editor · SIAM Chapters Meeting</title>
+<link rel="icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="content.js"></script>
+<style>
+:root {
+  --navy: #0b2f63; --steel: #2b8a9a; --mist: #cfe3e8; --rose: #c8102e;
+  --bg: #f3f6f9; --surface: #ffffff; --surface-2: #f8fafc; --ink: #001e44; --text: #26394f; --muted: #5f7389; --line: #d6dfe9;
+  --ok: #1d7a4f; --warn: #a15c00;
+  --sans: "Public Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --serif: "Newsreader", Georgia, serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 400 15px/1.5 var(--sans); }
+:focus-visible { outline: 2px solid var(--steel); outline-offset: 2px; }
+button { font: inherit; }
+
+.app { height: 100%; display: grid; grid-template-rows: 60px 1fr; }
+.bar { display: flex; align-items: center; gap: 10px; padding: 0 16px; background: var(--navy); color: #fff; }
+.bar h1 { font: 500 1.15rem/1 var(--serif); color: #fff; margin: 0 12px 0 4px; white-space: nowrap; }
+.bar .spacer { flex: 1; }
+.status { font-size: .82rem; padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,.12); color: #dfe8f1; white-space: nowrap; }
+.status.dirty { background: #ffe9c7; color: #6b3d00; }
+.status.saved { background: #d5f1e2; color: #11522f; }
+.bbtn {
+  display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 8px; cursor: pointer;
+  border: 1px solid rgba(255,255,255,.28); background: transparent; color: #fff; font-weight: 500; font-size: .88rem; white-space: nowrap;
+}
+.bbtn:hover { background: rgba(255,255,255,.1); }
+.bbtn.primary { background: #fff; color: var(--navy); border-color: #fff; font-weight: 600; }
+.bbtn.primary:hover { background: var(--mist); }
+.bbtn svg { width: 16px; height: 16px; }
+
+.main { display: grid; grid-template-columns: 220px minmax(380px, 1fr) minmax(0, 1.1fr); min-height: 0; }
+.main.no-preview { grid-template-columns: 220px minmax(380px, 1fr) 0; }
+.main.no-preview .preview { display: none; }
+.side { border-right: 1px solid var(--line); background: var(--surface); overflow-y: auto; padding: 14px 10px; }
+.side button {
+  display: block; width: 100%; text-align: left; padding: 9px 12px; border: 0; border-radius: 7px; background: none; cursor: pointer;
+  color: var(--text); font-weight: 500;
+}
+.side button:hover { background: var(--bg); }
+.side button[aria-current="true"] { background: #e3ebf3; color: var(--navy); }
+.side .help { margin: 18px 6px 0; padding: 12px; font-size: .8rem; color: var(--muted); border-top: 1px solid var(--line); }
+.side .help code { background: var(--bg); padding: 1px 4px; border-radius: 4px; color: var(--navy); }
+
+.form { overflow-y: auto; padding: 28px clamp(18px, 3vw, 40px) 80px; }
+.form h2 { font: 500 1.7rem/1.2 var(--serif); color: var(--ink); margin: 0 0 6px; }
+.form .lead { color: var(--muted); margin: 0 0 24px; max-width: 62ch; }
+.field { margin: 0 0 18px; }
+.field > label, .field > .lbl { display: block; font-weight: 600; color: var(--ink); font-size: .9rem; margin-bottom: 6px; }
+.hint { display: block; font-size: .8rem; color: var(--muted); margin: -2px 0 6px; }
+input[type=text], input[type=url], input[type=email], textarea {
+  width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface);
+  font: 400 .93rem/1.45 var(--sans); color: var(--text);
+}
+textarea { resize: vertical; min-height: 84px; }
+input:focus, textarea:focus { border-color: var(--steel); outline: none; box-shadow: 0 0 0 3px rgba(43,138,154,.2); }
+.check { display: flex; align-items: center; gap: 10px; padding: 8px 0; font-weight: 500; color: var(--ink); cursor: pointer; }
+.check input { width: 18px; height: 18px; accent-color: var(--navy); }
+.checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 0 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 8px 16px; }
+.subhead { font: 500 1.2rem/1.3 var(--serif); color: var(--ink); margin: 32px 0 12px; padding-top: 20px; border-top: 1px solid var(--line); }
+
+.img-row { display: flex; gap: 10px; align-items: center; }
+.img-row img, .swatch { width: 46px; height: 40px; padding: 2px; border: 1px solid var(--line); border-radius: 8px; background: #fff; cursor: pointer; flex: none; }
+.img-row .noimg { width: 42px; height: 42px; border-radius: 8px; object-fit: contain; border: 1px solid var(--line); background: #fff; flex: none; }
+.img-row .noimg { display: grid; place-items: center; color: var(--muted); font-size: .7rem; }
+
+.list { display: grid; gap: 10px; }
+.item { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.item > summary {
+  display: flex; align-items: center; gap: 8px; padding: 10px 10px 10px 14px; cursor: pointer; list-style: none; user-select: none;
+}
+.item > summary::-webkit-details-marker { display: none; }
+.item > summary .chev { width: 16px; height: 16px; color: var(--muted); transition: transform .15s ease; flex: none; }
+.item[open] > summary .chev { transform: rotate(90deg); }
+.item > summary .ttl { flex: 1; min-width: 0; font-weight: 500; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.item > summary .ttl.empty { color: var(--muted); font-style: italic; font-weight: 400; }
+.item .body { padding: 6px 14px 4px; border-top: 1px solid var(--line); background: var(--surface-2); border-radius: 0 0 10px 10px; }
+.item .body .item { background: var(--surface); }
+.ctrls { display: flex; gap: 2px; flex: none; }
+.ib { width: 30px; height: 30px; border: 0; border-radius: 6px; background: none; color: var(--muted); cursor: pointer; display: grid; place-items: center; }
+.ib:hover { background: var(--bg); color: var(--ink); }
+.ib.del:hover { background: #fde8ee; color: var(--rose); }
+.ib:disabled { opacity: .3; cursor: default; background: none; }
+.ib svg { width: 15px; height: 15px; }
+.str-row { display: flex; gap: 6px; align-items: flex-start; }
+.str-row > :first-child { flex: 1; }
+.add {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 8px 14px; border-radius: 8px; cursor: pointer;
+  border: 1px dashed var(--steel); background: transparent; color: var(--navy); font-weight: 600; font-size: .86rem;
+}
+.add:hover { background: #e9f0f6; }
+.empty-list { color: var(--muted); font-style: italic; font-size: .88rem; margin: 0; }
+
+.preview { border-left: 1px solid var(--line); background: #dfe6ee; display: flex; flex-direction: column; min-width: 0; }
+.preview .pbar { display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; font-size: .8rem; color: var(--muted); background: var(--surface); border-bottom: 1px solid var(--line); }
+.preview iframe { flex: 1; width: 100%; border: 0; background: #fff; }
+
+.banner { display: none; margin: 0 0 22px; padding: 14px 16px; border-radius: 10px; background: #fff4e0; border: 1px solid #f1d29e; color: #5c3600; }
+.banner.show { display: block; }
+.banner p { margin: 0 0 10px; }
+.banner button { margin-right: 8px; padding: 7px 12px; border-radius: 7px; border: 1px solid #c9a46a; background: #fff; cursor: pointer; font-weight: 600; color: #5c3600; }
+.banner button.main-act { background: #5c3600; color: #fff; border-color: #5c3600; }
+
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px); opacity: 0; transition: all .2s ease; background: var(--navy); color: #fff; padding: 10px 18px; border-radius: 8px; font-size: .9rem; pointer-events: none; z-index: 10; max-width: 90vw; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+dialog { border: 0; border-radius: 14px; padding: 0; max-width: 560px; width: calc(100% - 32px); box-shadow: 0 20px 60px rgba(0,20,50,.3); color: var(--text); }
+dialog::backdrop { background: rgba(0,20,50,.45); }
+dialog .dc { padding: 24px 26px; }
+dialog h3 { font: 500 1.4rem/1.2 var(--serif); color: var(--ink); margin: 0 0 12px; }
+dialog ol { padding-left: 20px; margin: 0 0 18px; }
+dialog li { margin-bottom: 8px; }
+dialog code { background: var(--bg); padding: 1px 5px; border-radius: 4px; color: var(--navy); }
+dialog .acts { display: flex; justify-content: flex-end; gap: 8px; }
+dialog .acts button { padding: 9px 16px; border-radius: 8px; border: 1px solid var(--line); background: #fff; cursor: pointer; font-weight: 600; }
+dialog .acts button.go { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+@media (max-width: 1100px) {
+  .main, .main.no-preview { grid-template-columns: 190px 1fr; }
+  .main .preview { display: none; }
+  .main.show-preview-mobile { grid-template-columns: 0 0 1fr; }
+  .main.show-preview-mobile .side, .main.show-preview-mobile .form { display: none; }
+  .main.show-preview-mobile .preview { display: flex; }
+  .bar .hide-sm { display: none; }
+}
+@media (max-width: 720px) {
+  .main, .main.no-preview { grid-template-columns: 1fr; }
+  .side { display: flex; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--line); padding: 8px; gap: 4px; }
+  .side button { width: auto; white-space: nowrap; }
+  .side .help { display: none; }
+  .main { grid-template-rows: auto 1fr; }
+  .bar h1 { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <h1>Website editor</h1>
+    <span class="status" id="status">No changes</span>
+    <span class="spacer"></span>
+    <button class="bbtn" id="importBtn" title="Load a content.js or .json file">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5M5 21h14"/></svg><span class="hide-sm">Open file</span></button>
+    <button class="bbtn" id="previewBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg><span id="previewLbl">Hide preview</span></button>
+    <button class="bbtn primary" id="exportBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Download content.js</button>
+    <input type="file" id="fileInput" accept=".js,.json,application/json,text/javascript" hidden>
+  </header>
+
+  <div class="main" id="main">
+    <nav class="side" id="side" aria-label="Sections"></nav>
+    <section class="form" id="form" aria-live="polite"></section>
+    <aside class="preview" id="preview">
+      <div class="pbar"><span>Live preview</span><span>Changes appear here instantly</span></div>
+      <iframe id="frame" title="Website preview" src="index.html?preview=1"></iframe>
+    </aside>
+  </div>
+</div>
+
+<dialog id="publishDlg">
+  <div class="dc">
+    <h3>content.js is downloaded</h3>
+    <p>To publish the changes on GitHub:</p>
+    <ol>
+      <li>Open the website repository on GitHub.</li>
+      <li>Click <strong>Add file</strong>, then <strong>Upload files</strong>, and drop the new <code>content.js</code>. It replaces the old one.</li>
+      <li>New photos or logos go in the <code>speakers/</code>, <code>people/</code> or <code>logos/</code> folders, uploaded the same way.</li>
+      <li>Click <strong>Commit changes</strong>. The site updates within a minute or two.</li>
+    </ol>
+    <div class="acts"><button id="copyBtn">Copy file contents</button><button class="go" id="closeDlg">Done</button></div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function () {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const DRAFT_KEY = "siam-cm-editor-draft";
+  const clone = (o) => JSON.parse(JSON.stringify(o));
+  const ORIGINAL = clone(window.SITE_CONTENT || {});
+  let data = clone(ORIGINAL);
+  let lastExported = JSON.stringify(ORIGINAL);
+  let current = "general";
+  const openState = new WeakMap();
+
+  /* ---------- icons ---------- */
+  const I = {
+    chev: '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>',
+    up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 15 6-6 6 6"/></svg>',
+    down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>',
+    copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>',
+    del: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>',
+    plus: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'
+  };
+
+  /* ---------- schema: what can be edited ---------- */
+  const person = (k, label, extra) => Object.assign({ k, label, type: "list", addLabel: "Add person", title: (x) => x.name, newItem: () => ({ name: "", affiliation: "", photo: "" }),
+    fields: [{ k: "name", label: "Name", type: "text" }, { k: "affiliation", label: "Affiliation", type: "text" }, { k: "photo", label: "Photo", type: "image", hint: "Path like ./people/name.jpg (upload the photo to the people folder) or a full https:// link. Leave empty to show initials." }] }, extra || {});
+  const talk = (k, label, addLabel) => ({ k, label, type: "list", addLabel, title: (x) => [x.name, x.title].filter(Boolean).join(" — "), newItem: () => ({ name: "", affiliation: "", title: "" }),
+    fields: [{ k: "name", label: "Presenter(s)", type: "text" }, { k: "affiliation", label: "Affiliation", type: "text" }, { k: "title", label: "Title", type: "text" }] });
+  const logos = (k, label) => ({ k, label, type: "list", addLabel: "Add logo", title: (x) => x.name, newItem: () => ({ name: "", logo: "", url: "" }),
+    fields: [{ k: "name", label: "Name", type: "text" }, { k: "logo", label: "Logo image", type: "image", hint: "Path like ./logos/file.png (upload it to the logos folder) or a full https:// link." }, { k: "url", label: "Website link", type: "url" }] });
+
+  const SECTIONS = [
+    { id: "general", label: "General", target: "home", lead: "Title, year, dates and location shown at the top of the page. Text fields can use {year}, {dates}, {venue} and {location}; they are filled in automatically.",
+      fields: [
+        { k: "meta.year", label: "Year", type: "text" },
+        { k: "hero.dates", label: "Dates", type: "text", hint: "As it should appear, e.g. January 28–29, 2027. Leave empty to show “Dates to be announced”." },
+        { k: "hero.location", label: "Location (short)", type: "text", hint: "e.g. Politecnico di Milano, Italy. Leave empty to show “Venue to be announced”." },
+        { k: "hero.kicker", label: "Line above the title", type: "text" },
+        { k: "hero.title", label: "Main title", type: "text" },
+        { k: "hero.subtitle", label: "Subtitle", type: "text" },
+        { k: "hero.ctaLabel", label: "Main button text", type: "text" },
+        { k: "hero.ctaUrl", label: "Main button link", type: "url", hint: "Leave empty to scroll to the Registration section." },
+        { type: "subhead", label: "Visible sections" },
+        { type: "checks", k: "sections", items: [["about", "About"], ["dates", "Important dates"], ["registration", "Registration"], ["schedule", "Schedule"], ["speakers", "Keynote speakers"], ["talks", "Talks and posters"], ["venue", "Venue and travel"], ["organisers", "Organisers"], ["institutions", "Institutions"]] },
+        { type: "subhead", label: "Search engines and browser tab" },
+        { k: "meta.pageTitle", label: "Browser tab title", type: "text" },
+        { k: "meta.description", label: "Description for search engines", type: "textarea" }
+      ] },
+    { id: "colours", label: "Colours", target: "home", lead: "Four colours drive the whole site, in light and dark mode. The defaults follow the UniGe blue with Genoa accents; paste the official hex codes here if you have them.",
+      fields: [
+        { k: "theme.primary", label: "Main colour", type: "color", hint: "Titles, buttons, footer." },
+        { k: "theme.secondary", label: "Second colour", type: "color", hint: "Hero mesh, icons and small details." },
+        { k: "theme.light", label: "Light tint", type: "color", hint: "Soft areas of the hero mesh; buttons in dark mode." },
+        { k: "theme.highlight", label: "Accent", type: "color", hint: "Used sparingly: links on hover, active schedule tab, last important date." },
+        { type: "reset-colours" }
+      ] },
+    { id: "about", label: "About and topics", target: "about", lead: "Write **bold** for bold, *italic* for italic and [text](https://link) for links.",
+      fields: [
+        { k: "about.paragraphs", label: "Paragraphs", type: "strings", item: "textarea", addLabel: "Add paragraph" },
+        { type: "subhead", label: "Topics" },
+        { k: "topics.intro", label: "Sentence before the topics", type: "text" },
+        { k: "topics.items", label: "Topics", type: "strings", item: "text", addLabel: "Add topic" }
+      ] },
+    { id: "dates", label: "Important dates", target: "dates", lead: "Leave a date empty to show “Date to be announced”.",
+      fields: [{ k: "importantDates", label: "Dates", type: "list", addLabel: "Add date", title: (x) => [x.event, x.date].filter(Boolean).join(" — "), newItem: () => ({ event: "", date: "" }),
+        fields: [{ k: "event", label: "What", type: "text" }, { k: "date", label: "Date", type: "text", hint: "e.g. December 15, 2026" }] }] },
+    { id: "registration", label: "Registration", target: "registration", lead: "Each step gets a button when its form link is filled in. Without a link, it shows “Form opens soon”.",
+      fields: [
+        { k: "registration.intro", label: "Introduction", type: "textarea" },
+        { k: "registration.steps", label: "Steps", type: "list", addLabel: "Add step", title: (x) => x.title, newItem: () => ({ title: "", deadline: "", description: "", link: "", linkLabel: "Open form" }),
+          fields: [{ k: "title", label: "Title", type: "text" }, { k: "deadline", label: "Deadline", type: "text" }, { k: "description", label: "Description", type: "textarea" }, { k: "link", label: "Form link", type: "url", hint: "e.g. a Google Forms link" }, { k: "linkLabel", label: "Button text", type: "text" }] }
+      ] },
+    { id: "schedule", label: "Schedule", target: "schedule", lead: "One tab per day. Rows mentioning coffee, lunch or break are shaded automatically. Leave time and programme empty to list another speaker in the same session.",
+      fields: [
+        { k: "schedule.intro", label: "Note under the heading", type: "textarea" },
+        { k: "schedule.programmeUrl", label: "Programme PDF link", type: "url", hint: "Optional. e.g. ./downloadables/programme.pdf" },
+        { k: "schedule.days", label: "Days", type: "list", addLabel: "Add day", title: (x) => x.label, newItem: () => ({ label: "", sessions: [] }),
+          fields: [{ k: "label", label: "Tab label", type: "text", hint: "e.g. Thursday, January 28" },
+            { k: "sessions", label: "Sessions", type: "list", addLabel: "Add row", title: (x) => [x.time, x.programme, x.speaker].filter(Boolean).join("  ·  "), newItem: () => ({ time: "", programme: "", speaker: "" }),
+              fields: [{ k: "time", label: "Time", type: "text", hint: "e.g. 9:00–9:40" }, { k: "programme", label: "Programme", type: "text" }, { k: "speaker", label: "Speaker", type: "text" }] }] }
+      ] },
+    { id: "speakers", label: "Keynote speakers", target: "speakers", lead: "Empty speakers appear as “Speaker to be announced”. Abstracts can contain maths between $…$, as in LaTeX.",
+      fields: [{ k: "keynotes", label: "Speakers", type: "list", addLabel: "Add speaker", title: (x) => x.name, newItem: () => ({ name: "", photo: "", affiliation: "", title: "", abstract: "" }),
+        fields: [{ k: "name", label: "Name", type: "text" }, { k: "affiliation", label: "Position and affiliation", type: "text" },
+          { k: "photo", label: "Photo", type: "image", hint: "Path like ./speakers/name.jpg (upload the photo to the speakers folder) or a full https:// link." },
+          { k: "title", label: "Talk title", type: "text" }, { k: "abstract", label: "Abstract", type: "textarea", rows: 8, hint: "Leave a blank line between paragraphs." }] }] },
+    { id: "talks", label: "Talks and posters", target: "talks", lead: "While a list is empty, the note below it is shown instead.",
+      fields: [
+        talk("talks.contributed", "Contributed and invited talks", "Add talk"),
+        { k: "talks.contributedNote", label: "Note while there are no talks", type: "text" },
+        { type: "subhead", label: "Posters" },
+        talk("talks.posters", "Poster contributions", "Add poster"),
+        { k: "talks.postersNote", label: "Note while there are no posters", type: "text" }
+      ] },
+    { id: "venue", label: "Venue and travel", target: "venue", lead: "To get the map link: open Google Maps, search the building, click Share, then Embed a map, and copy only the address inside src=\"…\".",
+      fields: [
+        { k: "venue.name", label: "Venue name", type: "text", hint: "e.g. Aula T.1.2, Building 13 (Trifoglio), Politecnico di Milano" },
+        { k: "venue.address", label: "Address", type: "text" },
+        { k: "venue.directions", label: "How to get there", type: "strings", item: "textarea", addLabel: "Add paragraph" },
+        { k: "venue.mapEmbedUrl", label: "Google Maps embed link", type: "url" },
+        { k: "venue.mapLinkUrl", label: "Google Maps link (optional)", type: "url", hint: "Adds an “Open in Google Maps” button." },
+        { type: "subhead", label: "Accommodation" },
+        { k: "accommodation.intro", label: "Sentence before the hotels", type: "text" },
+        { k: "accommodation.hotels", label: "Hotels", type: "list", addLabel: "Add hotel", title: (x) => x.name, newItem: () => ({ name: "", url: "", stars: "" }),
+          fields: [{ k: "name", label: "Name", type: "text" }, { k: "url", label: "Website", type: "url" }, { k: "stars", label: "Stars", type: "text", hint: "A number from 1 to 5" }] },
+        { k: "accommodation.extraLabel", label: "Extra button text", type: "text", hint: "e.g. Breakfast and lunch suggestions" },
+        { k: "accommodation.extraUrl", label: "Extra button link", type: "url", hint: "e.g. ./downloadables/VisitorGuide.pdf" },
+        { type: "subhead", label: "Contact" },
+        { k: "contact.email", label: "Contact email", type: "email" }
+      ] },
+    { id: "organisers", label: "Organisers", target: "organisers", lead: "Groups of people. Groups with nobody in them show “To be announced”.",
+      fields: [{ k: "organisers", label: "Groups", type: "list", addLabel: "Add group", title: (x) => x.title + (x.members && x.members.length ? " (" + x.members.length + ")" : ""), newItem: () => ({ title: "", members: [] }),
+        fields: [{ k: "title", label: "Group name", type: "text" }, person("members", "Members")] }] },
+    { id: "institutions", label: "Institutions", target: "institutions", lead: "Logos at the bottom of the page.",
+      fields: [
+        logos("institutions.contributors", "Contributors"),
+        { type: "subhead", label: "SIAM Chapters" },
+        { k: "institutions.chaptersIntro", label: "Sentence before the chapters", type: "textarea" },
+        logos("institutions.chapters", "Chapters"),
+        { type: "subhead", label: "Patronage" },
+        logos("institutions.patronage", "Under the auspices of")
+      ] },
+    { id: "footer", label: "Footer", target: "footerContent",
+      fields: [
+        { k: "footer.text", label: "Footer text", type: "text" },
+        { k: "footer.privacyUrl", label: "Privacy policy link", type: "url", hint: "e.g. ./downloadables/privacy_policy.pdf" }
+      ] }
+  ];
+
+  /* ---------- data helpers ---------- */
+  function get(o, path) { return path.split(".").reduce((a, k) => (a == null ? undefined : a[k]), o); }
+  function set(o, path, v) { const ks = path.split("."); let a = o; ks.slice(0, -1).forEach((k) => { if (a[k] == null || typeof a[k] !== "object") a[k] = {}; a = a[k]; }); a[ks[ks.length - 1]] = v; }
+  function arr(o, path) { let a = get(o, path); if (!Array.isArray(a)) { a = []; set(o, path, a); } return a; }
+  const el = (tag, attrs, html) => { const e = document.createElement(tag); if (attrs) Object.entries(attrs).forEach(([k, v]) => { if (k === "class") e.className = v; else e.setAttribute(k, v); }); if (html != null) e.innerHTML = html; return e; };
+  let uid = 0;
+
+  /* ---------- rendering the form ---------- */
+  function renderSide() {
+    const side = $("side"); side.innerHTML = "";
+    SECTIONS.forEach((s) => {
+      const b = el("button", { type: "button" }, s.label);
+      if (s.id === current) b.setAttribute("aria-current", "true");
+      b.onclick = () => { current = s.id; renderSide(); renderForm(true); post({ type: "siam-scroll", id: s.target }); };
+      side.appendChild(b);
+    });
+    side.appendChild(el("div", { class: "help" }, "Your work is kept in this browser as you type. Click <strong>Download content.js</strong> and upload it to GitHub to publish."));
+  }
+
+  function renderForm(resetScroll) {
+    const form = $("form"), y = form.scrollTop;
+    const s = SECTIONS.find((x) => x.id === current);
+    form.innerHTML = "";
+    form.appendChild($("draftBanner") || draftBanner);
+    form.appendChild(el("h2", null, s.label));
+    if (s.lead) form.appendChild(el("p", { class: "lead" }, s.lead.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]))));
+    renderFields(form, data, s.fields);
+    form.scrollTop = resetScroll ? 0 : y;
+  }
+
+  function renderFields(container, obj, fields) {
+    fields.forEach((f) => {
+      if (f.type === "subhead") { container.appendChild(el("h3", { class: "subhead" }, f.label)); return; }
+      if (f.type === "checks") {
+        const box = el("div", { class: "checks" });
+        f.items.forEach(([k, label]) => {
+          const id = "f" + (++uid), lab = el("label", { class: "check", for: id });
+          const cb = el("input", { type: "checkbox", id }); const path = f.k + "." + k;
+          cb.checked = get(obj, path) !== false;
+          cb.onchange = () => { set(obj, path, cb.checked); changed(); };
+          lab.append(cb, document.createTextNode(label)); box.appendChild(lab);
+        });
+        container.appendChild(box); return;
+      }
+      if (f.type === "reset-colours") {
+        const b = el("button", { type: "button", class: "add" }, "Restore the UniGe colours");
+        b.onclick = () => { data.theme = { primary: "#0b2f63", secondary: "#2b8a9a", light: "#cfe3e8", highlight: "#c8102e" }; structural(); };
+        container.appendChild(b); return;
+      }
+      if (f.type === "color") {
+        const wrap = el("div", { class: "field" }), id = "f" + (++uid);
+        wrap.appendChild(el("label", { for: id }, f.label));
+        if (f.hint) wrap.appendChild(el("span", { class: "hint" }, f.hint));
+        const row = el("div", { class: "img-row" });
+        const pick = el("input", { type: "color", "aria-label": f.label + " picker", class: "swatch" });
+        const txt = el("input", { type: "text", id, spellcheck: "false", placeholder: "#000000" });
+        const v = get(obj, f.k) || "";
+        txt.value = v; if (/^#[0-9a-f]{6}$/i.test(v)) pick.value = v;
+        pick.addEventListener("input", () => { txt.value = pick.value; set(obj, f.k, pick.value); changed(); });
+        txt.addEventListener("input", () => { let t = txt.value.trim(); if (/^[0-9a-f]{6}$/i.test(t)) t = "#" + t; if (/^#[0-9a-f]{6}$/i.test(t)) { pick.value = t; set(obj, f.k, t.toLowerCase()); changed(); } });
+        row.append(pick, txt); wrap.appendChild(row); container.appendChild(wrap); return;
+      }
+      const wrap = el("div", { class: "field" });
+      const id = "f" + (++uid);
+      if (f.type === "list") { renderList(wrap, obj, f); container.appendChild(wrap); return; }
+      if (f.type === "strings") { renderStrings(wrap, obj, f); container.appendChild(wrap); return; }
+      wrap.appendChild(el("label", { for: id }, f.label));
+      if (f.hint) wrap.appendChild(el("span", { class: "hint" }, f.hint));
+      const val = get(obj, f.k);
+      let input;
+      if (f.type === "textarea") { input = el("textarea", { id, rows: f.rows || 4 }); input.value = val == null ? "" : val; }
+      else { input = el("input", { id, type: f.type === "url" ? "url" : f.type === "email" ? "email" : "text", spellcheck: f.type === "text" || !f.type ? "true" : "false" }); input.value = val == null ? "" : val; }
+      if (f.type === "image") {
+        const row = el("div", { class: "img-row" });
+        const makeThumb = (v) => {
+          if (!v) return el("div", { class: "noimg" }, "none");
+          const t = el("img", { src: v, alt: "" });
+          t.onerror = () => t.replaceWith(el("div", { class: "noimg", title: "Image not found yet. Upload it to GitHub, then it will show." }, "?"));
+          return t;
+        };
+        input.addEventListener("change", () => row.replaceChild(makeThumb(input.value.trim()), row.firstChild));
+        row.append(makeThumb((val || "").trim()), input); wrap.appendChild(row);
+      } else wrap.appendChild(input);
+      input.addEventListener("input", () => { set(obj, f.k, input.value); changed(); if (container.__refreshTitle) container.__refreshTitle(); });
+      container.appendChild(wrap);
+    });
+  }
+
+  function iconBtn(svg, title, cls) { const b = el("button", { type: "button", class: "ib" + (cls ? " " + cls : ""), title, "aria-label": title }, svg); return b; }
+
+  function renderStrings(wrap, obj, f) {
+    wrap.appendChild(el("span", { class: "lbl" }, f.label));
+    const list = arr(obj, f.k);
+    const box = el("div", { class: "list" });
+    if (!list.length) box.appendChild(el("p", { class: "empty-list" }, "Nothing here yet."));
+    list.forEach((v, i) => {
+      const row = el("div", { class: "str-row" });
+      const input = f.item === "textarea" ? el("textarea", { rows: 4, "aria-label": f.label + " " + (i + 1) }) : el("input", { type: "text", "aria-label": f.label + " " + (i + 1) });
+      input.value = v == null ? "" : v;
+      input.addEventListener("input", () => { list[i] = input.value; changed(); });
+      const c = el("div", { class: "ctrls" });
+      const up = iconBtn(I.up, "Move up"), dn = iconBtn(I.down, "Move down"), del = iconBtn(I.del, "Remove", "del");
+      up.disabled = i === 0; dn.disabled = i === list.length - 1;
+      up.onclick = () => { [list[i - 1], list[i]] = [list[i], list[i - 1]]; structural(); };
+      dn.onclick = () => { [list[i + 1], list[i]] = [list[i], list[i + 1]]; structural(); };
+      del.onclick = () => { list.splice(i, 1); structural(); };
+      c.append(up, dn, del); row.append(input, c); box.appendChild(row);
+    });
+    wrap.appendChild(box);
+    const add = el("button", { type: "button", class: "add" }, I.plus + (f.addLabel || "Add"));
+    add.onclick = () => { list.push(""); structural(() => { const inputs = wrap.querySelectorAll("input, textarea"); const last = inputs[inputs.length - 1]; if (last) last.focus(); }); };
+    wrap.appendChild(add);
+  }
+
+  function renderList(wrap, obj, f) {
+    wrap.appendChild(el("span", { class: "lbl" }, f.label));
+    const list = arr(obj, f.k);
+    const box = el("div", { class: "list" });
+    if (!list.length) box.appendChild(el("p", { class: "empty-list" }, "Nothing here yet."));
+    list.forEach((item, i) => {
+      if (item == null || typeof item !== "object") { list[i] = item = {}; }
+      const det = el("details", { class: "item" });
+      if (openState.get(item)) det.open = true;
+      det.addEventListener("toggle", () => openState.set(item, det.open));
+      const sum = el("summary");
+      const ttl = el("span", { class: "ttl" });
+      const refresh = () => { const t = (f.title && f.title(item)) || ""; ttl.textContent = t || "Empty " + (f.addLabel || "item").replace(/^Add /, "") + " " + (i + 1); ttl.classList.toggle("empty", !t); };
+      refresh();
+      const c = el("div", { class: "ctrls" });
+      const up = iconBtn(I.up, "Move up"), dn = iconBtn(I.down, "Move down"), dup = iconBtn(I.copy, "Duplicate"), del = iconBtn(I.del, "Remove", "del");
+      up.disabled = i === 0; dn.disabled = i === list.length - 1;
+      const stop = (fn) => (e) => { e.preventDefault(); e.stopPropagation(); fn(); };
+      up.onclick = stop(() => { [list[i - 1], list[i]] = [list[i], list[i - 1]]; structural(); });
+      dn.onclick = stop(() => { [list[i + 1], list[i]] = [list[i], list[i + 1]]; structural(); });
+      dup.onclick = stop(() => { const copy = clone(item); openState.set(copy, true); list.splice(i + 1, 0, copy); structural(); });
+      del.onclick = stop(() => { const name = (f.title && f.title(item)) || "this item"; if (!isEmpty(item) && !confirm("Remove “" + name + "”?")) return; list.splice(i, 1); structural(); });
+      c.append(up, dn, dup, del);
+      sum.innerHTML = I.chev; sum.append(ttl, c);
+      const body = el("div", { class: "body" });
+      body.__refreshTitle = refresh;
+      // lazily build the body the first time it is opened
+      const fill = () => { if (!body.childElementCount) renderFields(body, item, f.fields); };
+      if (det.open) fill();
+      det.addEventListener("toggle", () => { if (det.open) fill(); });
+      det.append(sum, body); box.appendChild(det);
+    });
+    wrap.appendChild(box);
+    const add = el("button", { type: "button", class: "add" }, I.plus + (f.addLabel || "Add"));
+    add.onclick = () => { const n = f.newItem ? f.newItem() : {}; openState.set(n, true); list.push(n); structural(() => { const items = wrap.querySelector(".list").children; const last = items[items.length - 1]; if (last) { const inp = last.querySelector("input, textarea"); if (inp) inp.focus(); last.scrollIntoView({ block: "nearest", behavior: "smooth" }); } }); };
+    wrap.appendChild(add);
+  }
+  function isEmpty(o) { return !JSON.stringify(o).replace(/"[^"]*":/g, "").replace(/[\[\]{},"\s]/g, ""); }
+
+  /* ---------- state, saving, preview ---------- */
+  let timer = 0;
+  function structural(after) { changed(); renderForm(false); if (after) after(); }
+  function changed() {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      try { localStorage.setItem(DRAFT_KEY, JSON.stringify({ at: Date.now(), data })); } catch (e) {}
+      post({ type: "siam-preview", data });
+      updateStatus();
+    }, 220);
+    updateStatus();
+  }
+  function updateStatus() {
+    const s = $("status"), dirty = JSON.stringify(data) !== lastExported;
+    s.className = "status " + (dirty ? "dirty" : "saved");
+    s.textContent = dirty ? "Changes not yet downloaded" : "Up to date";
+  }
+  function post(msg) { const w = $("frame").contentWindow; if (w) w.postMessage(msg, "*"); }
+  window.addEventListener("message", (e) => { if (e.data && e.data.type === "siam-preview-ready") post({ type: "siam-preview", data }); });
+  $("frame").addEventListener("load", () => post({ type: "siam-preview", data }));
+
+  /* ---------- export / import ---------- */
+  function fileText() {
+    return "/* SIAM Chapters Meeting - website content.\n   Edit this with editor.html, then replace this file in the repository. */\nwindow.SITE_CONTENT = " + JSON.stringify(data, null, 2) + ";\n";
+  }
+  $("exportBtn").onclick = () => {
+    const blob = new Blob([fileText()], { type: "text/javascript" });
+    const a = el("a", { href: URL.createObjectURL(blob), download: "content.js" });
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    lastExported = JSON.stringify(data); updateStatus();
+    $("publishDlg").showModal();
+  };
+  $("closeDlg").onclick = () => $("publishDlg").close();
+  $("copyBtn").onclick = async () => {
+    try { await navigator.clipboard.writeText(fileText()); toast("Copied. Paste it into content.js on GitHub."); }
+    catch (e) { toast("Copying was blocked by the browser. Use the downloaded file instead."); }
+  };
+  function parseContent(text) {
+    const t = text.trim();
+    try { return JSON.parse(t.slice(t.indexOf("{"), t.lastIndexOf("}") + 1)); }
+    catch (e) { const w = {}; new Function("window", t)(w); if (w.SITE_CONTENT) return w.SITE_CONTENT; throw e; }
+  }
+  $("importBtn").onclick = () => $("fileInput").click();
+  $("fileInput").onchange = async (e) => {
+    const file = e.target.files[0]; if (!file) return;
+    try { data = parseContent(await file.text()); lastExported = JSON.stringify(data); renderForm(true); changed(); toast("Loaded " + file.name); }
+    catch (err) { toast("This file could not be read. Choose a content.js made by this editor."); }
+    e.target.value = "";
+  };
+
+  /* ---------- preview toggle ---------- */
+  let previewOn = true;
+  $("previewBtn").onclick = () => {
+    const m = $("main");
+    if (window.matchMedia("(max-width: 1100px)").matches) {
+      const on = m.classList.toggle("show-preview-mobile");
+      $("previewLbl").textContent = on ? "Back to editing" : "Show preview";
+      return;
+    }
+    previewOn = !previewOn; m.classList.toggle("no-preview", !previewOn);
+    $("previewLbl").textContent = previewOn ? "Hide preview" : "Show preview";
+  };
+  if (window.matchMedia("(max-width: 1100px)").matches) $("previewLbl").textContent = "Show preview";
+
+  /* ---------- toast ---------- */
+  let tt; function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("show"), 3200); }
+
+  /* ---------- draft restore ---------- */
+  const draftBanner = el("div", { class: "banner", id: "draftBanner" });
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (raw) {
+      const d = JSON.parse(raw);
+      if (d && d.data && JSON.stringify(d.data) !== JSON.stringify(ORIGINAL)) {
+        draftBanner.innerHTML = "<p>This browser has unsaved edits from " + new Date(d.at).toLocaleString() + ". Continue with them, or start again from the current content.js?</p>";
+        const keep = el("button", { type: "button", class: "main-act" }, "Continue my edits");
+        const drop = el("button", { type: "button" }, "Start from content.js");
+        keep.onclick = () => { data = d.data; draftBanner.classList.remove("show"); renderForm(false); changed(); };
+        drop.onclick = () => { try { localStorage.removeItem(DRAFT_KEY); } catch (e) {} draftBanner.classList.remove("show"); data = clone(ORIGINAL); renderForm(false); changed(); };
+        draftBanner.append(keep, drop); draftBanner.classList.add("show");
+      }
+    }
+  } catch (e) {}
+
+  if (!window.SITE_CONTENT) {
+    draftBanner.innerHTML = "<p>content.js was not found next to this editor. Click <strong>Open file</strong> to load it, or keep editing to build one from scratch.</p>";
+    draftBanner.classList.add("show");
+  }
+
+  window.addEventListener("beforeunload", (e) => { if (JSON.stringify(data) !== lastExported) { e.preventDefault(); e.returnValue = ""; } });
+
+  renderSide(); renderForm(true); updateStatus();
+})();
+</script>
+</body>
+</html>
