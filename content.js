@@ -7,10 +7,10 @@ window.SITE_CONTENT = {
     "year": "2027"
   },
   "theme": {
-    "primary": "#0b2f63",
-    "secondary": "#2b8a9a",
-    "light": "#cfe3e8",
-    "highlight": "#c8102e"
+    "primary": "#001e57",
+    "secondary": "#ff4013",
+    "light": "#ff8647",
+    "highlight": "#006d8f"
   },
   "sections": {
     "about": true,
@@ -28,7 +28,7 @@ window.SITE_CONTENT = {
     "title": "SIAM Chapters Meeting for Young Researchers",
     "subtitle": "in Applied Mathematics and Scientific Computing",
     "location": "Università di Genova, Italy",
-    "dates": "",
+    "dates": "March 18-19, 2027 ",
     "ctaLabel": "Register",
     "ctaUrl": ""
   },
@@ -69,16 +69,23 @@ window.SITE_CONTENT = {
     },
     {
       "event": "Registration deadline",
-      "date": ""
+      "date": "February 15, 2027"
     },
     {
       "event": "Meeting begins",
-      "date": ""
+      "date": "March 18, 2027"
     }
   ],
   "registration": {
     "intro": "Registration is free but mandatory. Forms open here once they are available.",
     "steps": [
+      {
+        "title": "Register to attend",
+        "deadline": "",
+        "description": "Everyone attending must register, including speakers and poster presenters.",
+        "link": "",
+        "linkLabel": "Open registration form"
+      },
       {
         "title": "Submit an abstract for a talk",
         "deadline": "",
@@ -92,13 +99,6 @@ window.SITE_CONTENT = {
         "description": "Every poster is presented with a three-minute elevator pitch.",
         "link": "",
         "linkLabel": "Open poster form"
-      },
-      {
-        "title": "Register to attend",
-        "deadline": "",
-        "description": "Everyone attending must register, including speakers and poster presenters.",
-        "link": "",
-        "linkLabel": "Open registration form"
       }
     ]
   },
