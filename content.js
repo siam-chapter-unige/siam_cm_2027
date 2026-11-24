@@ -83,7 +83,7 @@ window.SITE_CONTENT = {
         "title": "Register to attend",
         "deadline": "",
         "description": "Everyone attending must register, including speakers and poster presenters.",
-        "link": "",
+        "link": "https://forms.gle/Grk51WbRwifxr8vu9",
         "linkLabel": "Open registration form"
       },
       {
@@ -265,15 +265,43 @@ window.SITE_CONTENT = {
   "organisers": [
     {
       "title": "Organising committee",
-      "members": []
+      "members": [
+        {
+          "name": "Veronica Pignedoli",
+          "affiliation": "University of Genoa",
+          "photo": ""
+        },
+        {
+          "name": "Christian Daniele",
+          "affiliation": "University of Genoa",
+          "photo": ""
+        },
+        {
+          "name": "Sofia Agostoni",
+          "affiliation": "University of Genoa",
+          "photo": ""
+        },
+        {
+          "name": "Giordano Vitale",
+          "affiliation": "University of Genoa",
+          "photo": ""
+        }
+      ]
     },
     {
-      "title": "Local organisers",
-      "members": []
-    },
-    {
-      "title": "Representatives of other SIAM Chapters",
-      "members": []
+      "title": "Scientific committee",
+      "members": [
+        {
+          "name": "Davide Meroni",
+          "affiliation": "University of Milano-Bicocca",
+          "photo": ""
+        },
+        {
+          "name": "Christian Daniele",
+          "affiliation": "University of Genoa",
+          "photo": ""
+        }
+      ]
     }
   ],
   "institutions": {
@@ -307,11 +335,6 @@ window.SITE_CONTENT = {
         "url": "https://dima.unige.it/"
       },
       {
-        "name": "AIM Politecnico di Milano",
-        "logo": "./logos/logo-8192px.png",
-        "url": "https://www.aim-mate.it/"
-      },
-      {
         "name": "SIAM Chapter Pavia",
         "logo": "./logos/pavia.png",
         "url": "https://sites.google.com/view/siam-unipv/home"
@@ -330,6 +353,16 @@ window.SITE_CONTENT = {
         "name": "SISSA SIAM Chapter",
         "logo": "./logos/sissa.jpg",
         "url": "https://www.math.sissa.it/content/sissa-siam-student-chapter"
+      },
+      {
+        "name": "SIAM Chapter Milano-Bicocca",
+        "logo": "",
+        "url": ""
+      },
+      {
+        "name": "SIAM Chapter Salerno",
+        "logo": "",
+        "url": ""
       }
     ],
     "patronage": [
